@@ -1,48 +1,11 @@
 pipeline {
     agent any
-
-    environment {
-        GITHUB_REPO = 'nitrophenol/jenkins'
-        DOCKERHUB_REPO = 'nitrophenol/jenkins'
-    }
-
+    
     stages {
-        stage('Checkout') {
+        stage('Hello World') {
             steps {
-                // Pull the source code from GitHub repository
-                checkout([$class: 'GitSCM', 
-                    branches: [[name: '*/main']], 
-                    userRemoteConfigs: [[url: "https://github.com/${GITHUB_REPO}.git"]]])
+                echo 'Hello, World!'
             }
-        }
-
-        stage('Dockerize') {
-            steps {
-                // Build a Docker image
-                script {
-                    docker.build("${DOCKERHUB_REPO}:${env.BUILD_ID}")
-                }
-            }
-        }
-
-        stage('Push to Docker Hub') {
-            steps {
-                // Push the Docker image to Docker Hub
-                script {
-                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
-                        docker.image("${DOCKERHUB_REPO}:${env.BUILD_ID}").push()
-                    }
-                }
-            }
-        }
-    }
-
-    post {
-        success {
-            echo 'Pipeline executed successfully!'
-        }
-        failure {
-            echo 'Pipeline failed!'
         }
     }
 }
