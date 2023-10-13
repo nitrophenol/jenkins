@@ -10,7 +10,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Pull the source code from GitHub repository
-                checkout([$class: 'GitSCM', 
+                checkout($class: 'GitSCM', 
                     branches: [[name: '*/main']], 
                     userRemoteConfigs: [[url: "https://github.com/${GITHUB_REPO}.git"]])
             }
