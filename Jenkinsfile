@@ -12,15 +12,15 @@ pipeline {
                 // Pull the source code from GitHub repository
                 checkout([$class: 'GitSCM', 
                     branches: [[name: '*/main']], 
-                    userRemoteConfigs: [[url: "https://github.com/${GITHUB_REPO}.git"]]])
+                    userRemoteConfigs: [[url: "https://github.com/${GITHUB_REPO}.git"]])
             }
         }
 
         stage('Dockerize') {
             steps {
-                // Build a Docker image
+                // Build a Docker image with the "latest" tag
                 script {
-                    docker.build("${DOCKERHUB_REPO}:${env.BUILD_ID}")
+                    docker.build("${DOCKERHUB_REPO}:latest")
                 }
             }
         }
@@ -30,7 +30,7 @@ pipeline {
                 // Push the Docker image to Docker Hub
                 script {
                     docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
-                        docker.image("${DOCKERHUB_REPO}:${env.BUILD_ID}").push()
+                        docker.image("${DOCKERHUB_REPO}:latest").push()
                     }
                 }
             }
